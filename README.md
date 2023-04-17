@@ -1,4 +1,4 @@
-# StockFi - stock price prediction webapp
+# StockFi - stock price prediction app
 This is a stock price forecasting LSTM model, with UI for selecting configuration of the model.
 1) The webapp consists certain parameters which you need to input and train the model.
 2) Select the dates according to the opening of the market.

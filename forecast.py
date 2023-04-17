@@ -91,7 +91,6 @@ def main():
       #read data
         df = download_data(dataset)
         df = df.dropna()
-        st.write(df.shape)
 
       #define features and target var
         features = df.drop('Close', axis=1)
@@ -102,7 +101,6 @@ def main():
         sc = StandardScaler()
         x_ft = sc.fit_transform(features.values)
         x_ft = pd.DataFrame(columns=features.columns, data = x_ft, index = features.index)
-        st.write(x_ft.shape)
         
         sc_close = StandardScaler()
         y_ft = sc_close.fit_transform(target.values.reshape(-1,1))
@@ -140,10 +138,7 @@ def main():
       
       # unscale the predicted and actual values
         y_predict_unscaled = sc_close.inverse_transform(y_predict)
-        y_test_unscaled = sc_close.inverse_transform(y_test)
-
-
-    # test scores
+        y_test_unscaled = sc_close.inverse_transform(y_test.reshape(-1, 1)).flatten()
 
       #test scores
         rmse = mean_squared_error(y_test, y_predict, squared = False)
@@ -151,9 +146,6 @@ def main():
         progress_bar.progress(100)
         st.write("RMSE: " , rmse)
         st.write("MAPE: " , mape)
-        
-        st.write(y_test.shape)
-        st.write(y_predict_unscaled.shape)
 
       #plots showing predicted and actual value
         

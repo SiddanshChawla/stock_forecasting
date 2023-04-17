@@ -88,7 +88,7 @@ def main():
         return np.array(X), np.array(y)
 
 
-    def forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation, optimizer):
+    def forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation):
       #read data
         df = download_data(dataset)
         df = df.dropna()
@@ -197,7 +197,7 @@ def main():
     if submitted:
         with st.spinner('Running Machine Learning model...'):
             progress_bar = st.progress(0)
-            forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation, optimizer)
+            forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation)
             progress_bar.empty()
             st.success('Model run successfully!')
     

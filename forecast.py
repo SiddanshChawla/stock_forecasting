@@ -130,7 +130,7 @@ def main():
         model.add(Dense(units = 1))
 
       #compile the model
-        optimizer = Adam(learning_rate=0.01)
+        optimizer = Adam(learning_rate=0.001)
         model.compile(loss='mean_squared_error', optimizer=optimizer)
 
       #run the model

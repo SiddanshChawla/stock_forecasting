@@ -8,8 +8,6 @@ from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_percentage_error
 import yfinance as yf
-import plotly.express as px
-import plotly.graph_objs as go
 
 def main():
 

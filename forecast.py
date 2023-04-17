@@ -123,7 +123,7 @@ def main():
         
       # adding learning rate
         learning_rate = 0.001
-        opt = optimizer(learning_rate=learning_rate)
+        opt = f'{optimizer}(learning_rate={learning_rate})'
         
       #make a model
         model = Sequential()

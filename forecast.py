@@ -8,6 +8,8 @@ from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_percentage_error
 import yfinance as yf
+import plotly.express as px
+import plotly.graph_objs as go
 
 def main():
 
@@ -19,7 +21,7 @@ def main():
     dataset = st.selectbox('Select a company', COMPANY_OPTIONS)
     n_steps = st.slider('Select steps to create dataset', 2, 10, 1)
     lstm_units = st.slider('Select number of units for LSTM', 32, 128, 1)
-    epochs = st.slider('Select number of epochs for training', 0, 100, step=10)
+    epochs = st.slider('Select number of epochs for training', 0, 100, step=1)
     train_test_split = st.slider('Select Train/Test Split', 0.0, 1.0, step=0.1)
     activation = st.selectbox('Select an activation function', ('linear', 'sigmoid', 'relu', 'softmax'))
     optimizer = st.selectbox('Select an optimizer', ('adam', 'sgd', 'adagrad'))
@@ -46,7 +48,7 @@ def main():
         sma_values = calculate_sma(close_prices)
         df['SMA'] = sma_values
 
-        df = df[{'Open', 'High', 'Low', 'RSI', 'SMA', 'Close'}]
+        df = df[['Open', 'High', 'Low', 'RSI', 'SMA', 'Close']]
         progress_bar.progress(45)
         #download bse and nifty data
         bse = data('^BSESN')
@@ -73,35 +75,56 @@ def main():
 
     def create_dataset(data, n_steps):
         X, y = [], []
-        for i in range(len(data) - n_steps + 1):
-          X.append(data[i:i + n_steps, : - 1])
-          y.append(data[i + n_steps-1, -1])
+        if len(data.shape) == 1:
+            # Handle 1D input array
+            for i in range(len(data) - n_steps + 1):
+                X.append(data[i:i + n_steps])
+                y.append(data[i + n_steps - 1])
+        else:
+            # Handle 2D input array
+            for i in range(len(data) - n_steps + 1):
+                X.append(data[i:i + n_steps, :-1])
+                y.append(data[i + n_steps - 1, -1])
         progress_bar.progress(55)
         return np.array(X), np.array(y)
 
 
     def forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation, optimizer):
-        #read data
+      #read data
         df = download_data(dataset)
         df = df.dropna()
+        st.write(df.shape)
 
+      #define features and target var
+        features = df.drop('Close', axis=1)
+        target = df['Close']
+        
+        
       #normalize data using standard scaler
         sc = StandardScaler()
-        x_ft = sc.fit_transform(df.values)
-        x_ft = pd.DataFrame(columns=df.columns, data = x_ft, index = df.index)
+        x_ft = sc.fit_transform(features.values)
+        x_ft = pd.DataFrame(columns=features.columns, data = x_ft, index = features.index)
+        st.write(x_ft.shape)
+        
+        sc_close = StandardScaler()
+        y_ft = sc_close.fit_transform(target.values.reshape(-1,1))
 
-      #select features and target variables, (usually the last column will be the target value)
-        X1, y1 = create_dataset(x_ft.values, n_steps)
 
       #split data in train and test
         train_split = train_test_split
-        split_idx = int(np.ceil(len(X1)*train_split))
+        split_idx = int(np.ceil(len(x_ft)*train_split))
         date_index = x_ft.index
 
-        X_train, X_test = X1[:split_idx], X1[split_idx:]
-        y_train, y_test = y1[:split_idx], y1[split_idx:]
+        X_train, X_test = x_ft[:split_idx], x_ft[split_idx:]
+        y_train, y_test = y_ft[:split_idx], y_ft[split_idx:]
         X_train_date, X_test_date = date_index[:split_idx], date_index[split_idx:]
+        
+        
+      #create sequences of input data and corresponding output values
+        X_train, y_train = create_dataset(X_train.values, n_steps)
+        X_test, y_test = create_dataset(X_test.values, n_steps)
         progress_bar.progress(70)
+        
       #make a model
         model = Sequential()
         model.add(LSTM(units = lstm_units, input_shape=(X_train.shape[1],X_train.shape[2]), activation=activation, return_sequences=True))
@@ -113,25 +136,35 @@ def main():
 
       #run the model
         history = model.fit(X_train, y_train, epochs=epochs, verbose = 1, shuffle=False)
-
+        
       #predict values
         y_predict = model.predict(X_test)
-        
+      
+      # unscale the predicted and actual values
+        y_predict_unscaled = sc_close.inverse_transform(y_predict)
+
+
+
+    # test scores
+
       #test scores
         rmse = mean_squared_error(y_test, y_predict, squared = False)
         mape = mean_absolute_percentage_error(y_test, y_predict)
         progress_bar.progress(100)
         st.write("RMSE: " , rmse)
         st.write("MAPE: " , mape)
+        
+        st.write(y_test.shape)
+        st.write(y_predict_unscaled.shape)
 
       #plots showing predicted and actual value
+        
         fig, ax = plt.subplots()
         ax.plot(y_test, label='actual')
-        ax.plot(y_predict, label='predicted')
+        ax.plot(y_predict_unscaled, label='predicted')
         ax.legend()
         st.pyplot(fig)
         
-    
     
     def calculate_rsi(prices, n=14):
         deltas = np.diff(prices)

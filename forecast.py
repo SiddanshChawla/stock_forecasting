@@ -7,6 +7,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_percentage_error
+from tensorflow.keras.optimizers import Adam, SGD, Adagrad
 import yfinance as yf
 
 def main():
@@ -22,7 +23,7 @@ def main():
     epochs = st.slider('Select number of epochs for training', 0, 100, step=1)
     train_test_split = st.slider('Select Train/Test Split', 0.0, 1.0, step=0.1)
     activation = st.selectbox('Select an activation function', ('linear', 'sigmoid', 'relu', 'softmax'))
-    optimizer = st.selectbox('Select an optimizer', ('adam', 'sgd', 'adagrad'))
+    optimizer = st.selectbox('Select an optimizer', ('Adam', 'SGD', 'Adagrad'))
 
     submitted = st.button('Submit')
 

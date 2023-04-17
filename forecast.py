@@ -121,14 +121,19 @@ def main():
         X_test, y_test = create_dataset(X_test.values, n_steps)
         progress_bar.progress(70)
         
+      # adding learning rate
+        learning_rate = 0.001
+        opt = optimizer(learning_rate=learning_rate)
+        
       #make a model
         model = Sequential()
         model.add(LSTM(units = lstm_units, input_shape=(X_train.shape[1],X_train.shape[2]), activation=activation, return_sequences=True))
+        model.add(LSTM(units = lstm_units, activation=activation, return_sequences=True))
         model.add(LSTM(units = lstm_units, activation=activation))
         model.add(Dense(units = 1))
 
       #compile the model
-        model.compile(loss='mean_squared_error', optimizer=optimizer)
+        model.compile(loss='mean_squared_error', optimizer=opt)
 
       #run the model
         history = model.fit(X_train, y_train, epochs=epochs, verbose = 1, shuffle=False)

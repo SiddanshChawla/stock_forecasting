@@ -5,5 +5,6 @@ This is a stock price forecasting LSTM model, with UI for selecting configuratio
 3) The results would be given below the model.
 4) You can train the model on custom dataset, currently only 4 companies are included to forecast from.
 5) This web app will also contain news sentiments predicted from live news data, using custom trained sentiment model. 
+Note - The main file is forecast.py
 
 webapp link - https://siddanshchawla-stock-forecasting-forecast-p2rahd.streamlit.app

@@ -140,7 +140,7 @@ def main():
       
       # unscale the predicted and actual values
         y_predict_unscaled = sc_close.inverse_transform(y_predict)
-
+        y_test_unscaled = sc_close.inverse_transform(y_test)
 
 
     # test scores
@@ -158,7 +158,7 @@ def main():
       #plots showing predicted and actual value
         
         fig, ax = plt.subplots()
-        ax.plot(y_test, label='actual')
+        ax.plot(y_test_unscaled, label='actual')
         ax.plot(y_predict_unscaled, label='predicted')
         ax.legend()
         st.pyplot(fig)

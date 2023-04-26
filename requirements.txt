@@ -11,6 +11,4 @@ rake_nltk
 nltk
 plotly-express
 spacy
-string
 textblob
-re

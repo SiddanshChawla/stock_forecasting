@@ -5,3 +5,8 @@ matplotlib
 scikit-learn 
 tensorflow 
 yfinance
+newsapi-python
+datetime
+rake_nltk
+nltk
+plotly-express

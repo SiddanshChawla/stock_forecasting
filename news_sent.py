@@ -7,6 +7,9 @@ from preprocess import preprocess, get_result, tokenize_pad
 import numpy as np
 import pandas as pd
 from news import extract_phrases
+import nltk
+nltk.download('stopwords')
+nltk.download('punkt')
 
 def predict_sentiment(description):
     model = load_model('gru_sentiment_model.h5')

@@ -20,16 +20,16 @@ def main():
             epochs = st.slider('Select number of epochs for training', 0, 100, 50, step=1)
         st.write("")
         with col2:
-            n_steps = st.slider('Select lookback to create dataset', 1, 100, 2)
+            n_steps1 = st.slider('Select lookback to create dataset', 1, 100, 2)
         with col1:
             lstm_units = st.selectbox('Select number of units for LSTM', {32, 64, 128})
         with col2:
             train_test_split = st.selectbox('Select Train/Test Split', {0.7, 0.8, 0.9})
         submitted1 = st.form_submit_button('Submit')
         if submitted1:
-            model, sc, sc_close = forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation)
+            model, sc, sc_close = forecast_prices(dataset, n_steps=2, lstm_units, epochs, train_test_split, activation)
             st.success('Model ran successfully!')
-            answer = predict_next_day(model, sc, sc_close, n_steps, dataset)
+            answer = predict_next_day(model, sc, sc_close, n_steps=2, dataset)
             
             st.write("Today's price prediction is : ", answer)
     

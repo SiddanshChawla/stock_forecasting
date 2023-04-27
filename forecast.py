@@ -5,6 +5,7 @@ import datetime
 from news_sent import predict_sentiment
 
 def main():
+    n_steps = 2
 
     # Define company options
     COMPANY_OPTIONS = ('RELIANCE.NS', 'TCS.NS', 'TATAMOTORS.NS', 'ADANIENT.NS')
@@ -27,7 +28,7 @@ def main():
             train_test_split = st.selectbox('Select Train/Test Split', {0.7, 0.8, 0.9})
         submitted1 = st.form_submit_button('Submit')
         if submitted1:
-            model, sc, sc_close = forecast_prices(dataset, n_steps=2, lstm_units, epochs, train_test_split, activation)
+            model, sc, sc_close = forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation)
             st.success('Model ran successfully!')
             answer = predict_next_day(model, sc, sc_close, n_steps=2, dataset)
             

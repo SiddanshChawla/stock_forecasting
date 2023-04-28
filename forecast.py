@@ -35,7 +35,7 @@ def main():
                 answer = predict_next_day(model, sc, sc_close, n_steps, dataset)
                 my_bar.progress(90, text='Prediction in progress!')
                 my_bar.progress(100, text='Prediction complete!')
-            st.success("Today's price prediction is : ", answer)
+            st.success(f"Today's price prediction is : {answer}")
     
     st.header("News Sentiment analyser: ")
     with st.form(key='form2'):

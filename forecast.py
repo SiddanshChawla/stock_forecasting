@@ -30,7 +30,7 @@ def main():
         if submitted1:
             model, sc, sc_close = forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation)
             st.success('Model ran successfully!')
-            answer = predict_next_day(model, sc, sc_close, n_steps=2, dataset)
+            answer = predict_next_day(model, sc, sc_close, n_steps, dataset)
             
             st.write("Today's price prediction is : ", answer)
     

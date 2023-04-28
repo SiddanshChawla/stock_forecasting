@@ -28,13 +28,15 @@ def main():
             train_test_split = st.selectbox('Select Train/Test Split', {0.7, 0.8, 0.9})
         submitted1 = st.form_submit_button('Submit')
         if submitted1:
+            with st.spinner('Wait for it...'):
             my_bar = st.progress(20, text='Model training in progress')
             model, sc, sc_close = forecast_prices(dataset, n_steps, lstm_units, epochs, train_test_split, activation)
-            my_bar.progress(60 + 1, text='Model trained successfully!')
+            my_bar.progress(60, text='Model trained successfully!')
             answer = predict_next_day(model, sc, sc_close, n_steps, dataset)
-            my_bar.progress(90 + 1, text='Prediction in progress!')
+            my_bar.progress(90, text='Prediction in progress!')
             st.write("Today's price prediction is : ", answer)
-            my_bar.progress(100 + 1, text='Prediction complete!')
+            my_bar.progress(100, text='Prediction complete!')
+            st.success('Done')
     
     st.header("News Sentiment analyser: ")
     with st.form(key='form2'):

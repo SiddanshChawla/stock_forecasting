@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from news import extract_phrases
 import nltk
+import os
 nltk.download('stopwords')
 nltk.download('punkt')
 
@@ -23,7 +24,7 @@ def predict_sentiment(description):
     keywords = extract_phrases(description)
     important_keywords = keywords[:2]
 
-    newsapi = NewsApiClient(api_key='0eab831ebf9c402ba6f4f2312b355ad6')
+    newsapi = NewsApiClient(api_key=st.secrets["API_KEY"])
     for keyword in important_keywords:
         keyword = keyword
         all_articles = newsapi.get_everything(q=keyword,
